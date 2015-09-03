@@ -22,7 +22,7 @@ class BurningWidget(QWidget):
 
     def initUI(self):
 
-        self.setMinimumSize(1200, 800)
+        self.setMinimumSize(1800, 1000)
         self.value = 0
         
     def setValue(self):
@@ -44,17 +44,17 @@ class BurningWidget(QWidget):
 
         if self.value <= 1:
             qp.setBrush(QColor('Blue'))
-            qp.drawRect(0, 0, 1200, 800)
+            qp.drawRect(0, 0, 1800, 1000)
 
         if self.value == 1:
             qp.setBrush(QColor('Yellow'))
-            self.polygon = QPolygon([QPoint(450, 530), QPoint(750, 530),QPoint(600, 270),QPoint(450, 530)])
+            self.polygon = QPolygon([QPoint(750, 600), QPoint(1050, 600),QPoint(900, 340),QPoint(750, 600)])
             
             qp.drawPolygon(self.polygon)
             
         if self.value > 1:
             qp.setBrush(QColor('White'))
-            qp.drawRect(0, 0, 1200, 800)
+            qp.drawRect(0, 0, 1800, 1000)
        
 class Example(QWidget):
 
@@ -88,7 +88,7 @@ class Example(QWidget):
         vbox.addLayout(hbox)
         self.setLayout(vbox)
 
-        self.setGeometry(300, 150, 1200, 800)
+        self.setGeometry(0, 0, 1800, 1000)
         self.setWindowTitle('Burning widget')
         self.show()
 
@@ -116,7 +116,7 @@ class Example(QWidget):
             self.CurrentTime =  time.time() - self.CurrentTime
             print(self.CurrentTime)
             d = datetime.today()
-            self.file.write(str(d.date()))
+            self.file.write(str(d.strftime('%y-%m-%d %H:%M:%S')))
             self.file.write('\n')
             self.file.write(str(round(self.CurrentTime,1)))
             self.file.close()
