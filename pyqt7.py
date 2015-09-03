@@ -41,15 +41,20 @@ class BurningWidget(QWidget):
         col = QColor(0, 0, 0)
         col.setNamedColor('#d4d4d4')
         qp.setPen(col)
-        
-        qp.setBrush(QColor('White'))
-        qp.drawRect(0, 0, 1200, 800)
+
+        if self.value <= 1:
+            qp.setBrush(QColor('Blue'))
+            qp.drawRect(0, 0, 1200, 800)
 
         if self.value == 1:
-            qp.setBrush(QColor('Blue'))
+            qp.setBrush(QColor('Yellow'))
             self.polygon = QPolygon([QPoint(450, 530), QPoint(750, 530),QPoint(600, 270),QPoint(450, 530)])
             
             qp.drawPolygon(self.polygon)
+            
+        if self.value > 1:
+            qp.setBrush(QColor('White'))
+            qp.drawRect(0, 0, 1200, 800)
        
 class Example(QWidget):
 
@@ -72,7 +77,7 @@ class Example(QWidget):
 
         if ok:
             le.setText(str(text))
-            self.file = open("""/home/an/%(data)s.txt"""%{'data':text}, 'w')
+            self.file = open("""/home/an/%(data)s.txt"""%{'data':text}, 'a')
             print (text)
             
         
@@ -93,17 +98,27 @@ class Example(QWidget):
 
             self.c.updateBW.emit()
             self.wid.repaint()
+            t = time.time()
+            j = 0
+            while j<=7:
+                j = time.time() - t
+            print (j)
+            self.c.updateBW.emit()
+            self.wid.repaint()
             
         if e.key() == Qt.Key_F1:
             self.c.updateBW.emit()
             self.wid.repaint()
-            self.CurrentTime = datetime.utcnow()
+            self.CurrentTime = time.time()
             print(self.CurrentTime)
 
-        if e.key() == Qt.Key_Shift:
-            self.CurrentTime =  datetime.utcnow() - self.CurrentTime
+        if e.key() == Qt.Key_F2:
+            self.CurrentTime =  time.time() - self.CurrentTime
             print(self.CurrentTime)
-            self.file.write(str(self.CurrentTime))
+            d = datetime.today()
+            self.file.write(str(d.date()))
+            self.file.write('\n')
+            self.file.write(str(round(self.CurrentTime,1)))
             self.file.close()
 
 
