@@ -1,8 +1,10 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QSlider, QApplication,
-    QHBoxLayout, QVBoxLayout)
+from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
+    QInputDialog, QApplication, QHBoxLayout, QVBoxLayout)
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import time
+from datetime import datetime, timedelta, date, time as dt_time
 
 
 class Communicate(QObject):
@@ -20,16 +22,13 @@ class BurningWidget(QWidget):
 
     def initUI(self):
 
-        self.setMinimumSize(600, 600)
+        self.setMinimumSize(1200, 800)
         self.value = 0
         
-
-
     def setValue(self):
 
-        self.value = 1
-
-
+        self.value = self.value + 1
+        
     def paintEvent(self, e):
 
         qp = QPainter()
@@ -42,19 +41,15 @@ class BurningWidget(QWidget):
         col = QColor(0, 0, 0)
         col.setNamedColor('#d4d4d4')
         qp.setPen(col)
-
+        
         qp.setBrush(QColor('White'))
-        qp.drawRect(0, 0, 600, 600)
-
+        qp.drawRect(0, 0, 1200, 800)
 
         if self.value == 1:
             qp.setBrush(QColor('Blue'))
-            #qp.setPen(QPen(QBrush(Qt.blue), 2, Qt.SolidLine))
-            self.polygon = QPolygon([QPoint(100, 130), QPoint(300, 130),QPoint(200, 20),QPoint(100, 130)])
+            self.polygon = QPolygon([QPoint(450, 530), QPoint(750, 530),QPoint(600, 270),QPoint(450, 530)])
             
             qp.drawPolygon(self.polygon)
-
-
        
 class Example(QWidget):
 
@@ -66,13 +61,21 @@ class Example(QWidget):
 
     def initUI(self):
 
-       
-
         self.c = Communicate()
         self.wid = BurningWidget()
         self.c.updateBW.connect(self.wid.setValue)
+        
+        le = QLineEdit(self)
+        le.move(130, 22)
+        text, ok = QInputDialog.getText(self, 'Input Dialog',
+        'Enter your name:')
 
-        #sld.valueChanged[int].connect(self.changeValue)
+        if ok:
+            le.setText(str(text))
+            self.file = open("""/home/an/%(data)s.txt"""%{'data':text}, 'w')
+            print (text)
+            
+        
         hbox = QHBoxLayout()
         hbox.addWidget(self.wid)
         vbox = QVBoxLayout()
@@ -80,15 +83,28 @@ class Example(QWidget):
         vbox.addLayout(hbox)
         self.setLayout(vbox)
 
-        self.setGeometry(300, 300, 600, 600)
+        self.setGeometry(300, 150, 1200, 800)
         self.setWindowTitle('Burning widget')
         self.show()
 
+    def keyPressEvent(self, e):
 
-    def mousePressEvent(self, event):
+        if e.key() == Qt.Key_Tab:
 
-        self.c.updateBW.emit()
-        self.wid.repaint()
+            self.c.updateBW.emit()
+            self.wid.repaint()
+            
+        if e.key() == Qt.Key_F1:
+            self.c.updateBW.emit()
+            self.wid.repaint()
+            self.CurrentTime = datetime.utcnow()
+            print(self.CurrentTime)
+
+        if e.key() == Qt.Key_Shift:
+            self.CurrentTime =  datetime.utcnow() - self.CurrentTime
+            print(self.CurrentTime)
+            self.file.write(str(self.CurrentTime))
+            self.file.close()
 
 
 if __name__ == '__main__':
