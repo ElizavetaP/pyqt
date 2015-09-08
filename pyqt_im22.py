@@ -23,7 +23,8 @@ class Example(QWidget):
     def initUI0(self):
 
         self.f = open('names.txt')
-        self.line = self.f.readline()
+        self.lines = [line.rstrip('\n') for line in self.f]
+        self.j =0
 
         
         self.i = 1
@@ -52,11 +53,8 @@ class Example(QWidget):
         
         if self.i > 0:
             self.t0 = time.time()
-            print(self.line)
-            self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.line)}).scaled(1000, 700, Qt.KeepAspectRatio))
-            while self.line:
-                self.line = self.f.readline()
-                break
+            self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.lines[self.j])}).scaled(1000, 700, Qt.KeepAspectRatio))
+            self.j = self.j + 1
             
         else:
             
