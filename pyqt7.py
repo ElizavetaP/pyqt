@@ -101,25 +101,31 @@ class Example(QWidget):
             t = time.time()
             j = 0
             while j<=7:
+                r = 1000*856+7456/145+45621
                 j = time.time() - t
             print (j)
             self.c.updateBW.emit()
             self.wid.repaint()
+            self.t1 = time.time()
             
         if e.key() == Qt.Key_F1:
             self.c.updateBW.emit()
             self.wid.repaint()
-            self.CurrentTime = time.time()
-            print(self.CurrentTime)
-
-        if e.key() == Qt.Key_F2:
-            self.CurrentTime =  time.time() - self.CurrentTime
-            print(self.CurrentTime)
             d = datetime.today()
+            self.t2 = time.time()
             self.file.write(str(d.strftime('%y-%m-%d %H:%M:%S')))
             self.file.write('\n')
-            self.file.write(str(round(self.CurrentTime,1)))
+            self.file.write(str(round(time.time()-self.t1,1)))
+            self.file.write('\n')
+
+        if e.key() == Qt.Key_F2:
+            self.file.write(str(round(time.time() - self.t2,1)))
+            self.file.write('\n')
+            self.file.write('\n')
             self.file.close()
+
+        if e.key() == Qt.Key_Escape:
+            self.close()
 
 
 if __name__ == '__main__':
