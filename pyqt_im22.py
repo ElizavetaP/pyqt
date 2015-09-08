@@ -65,7 +65,7 @@ class Example(QWidget):
         if e.key() == Qt.Key_Tab:
             if self.i < 0:
                 self.file = open(self.myfile, 'a')
-                self.file.write(str(round(time.time() - self.t0,1)))
+                self.file.write(self.lines[self.j-1] +":  " + str(round(time.time() - self.t0,1)))
                 self.file.write('\n')
                 self.file.close()
             self.i = self.i*(-1)
