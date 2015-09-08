@@ -58,10 +58,11 @@ class Example(QWidget):
         if self.i > 0:
             if self.j < len(self.lines):
                 self.t0 = time.time()
-                self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.lines[self.j])}).scaled(1000, 700, Qt.KeepAspectRatio))
+                self.name = self.lines[self.j]
+                self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':self.name}).scaled(1000, 700, Qt.KeepAspectRatio))
+                
                 self.j = self.j + 1
                 if self.j == len(self.lines)-1:
-                    print('on')
                     self.f.close()
                     self.f1 = open('/home/an/pyqt/11/names1.txt')
                     self.lines1 = [line.rstrip('\n') for line in self.f1]
@@ -69,8 +70,12 @@ class Example(QWidget):
             else:
                 if self.g < len(self.lines):
                     self.t0 = time.time()
-                    self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.lines1[self.g])}).scaled(1000, 700, Qt.KeepAspectRatio))
+                    self.name = self.lines1[self.g]
+                    self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':self.name}).scaled(1000, 700, Qt.KeepAspectRatio))
                     self.g = self.g + 1
+                else:
+                    self.name = 0
+                    
             
         else:
             
@@ -79,11 +84,12 @@ class Example(QWidget):
     def keyPressEvent(self, e):
 
         if e.key() == Qt.Key_Tab:
-            if self.i < 0:
-                self.file = open(self.myfile, 'a')
-                self.file.write(self.lines[self.j-1] +":  " + str(round(time.time() - self.t0,1)))
-                self.file.write('\n')
-                self.file.close()
+            if self.i > 0:
+                if self.name != 0:
+                    self.file = open(self.myfile, 'a')
+                    self.file.write(self.name +":  " + str(round(time.time() - self.t0,1)))
+                    self.file.write('\n')
+                    self.file.close()
             self.i = self.i*(-1)
             
             self.c.updateBW.emit()
