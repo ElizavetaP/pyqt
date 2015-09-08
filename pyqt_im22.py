@@ -18,7 +18,11 @@ class Example(QWidget):
 
         self.initUI0()
         self.updateUi()
-        self.setGeometry(0, 0, 1000, 800)
+        self.setGeometry(100, 100, 1000, 800)
+        self.col = QColor(97,97,97,160)
+        self.setStyleSheet("QWidget { background-color: %s }" %
+            self.col.name())
+
         self.show()
     def initUI0(self):
 
@@ -52,9 +56,21 @@ class Example(QWidget):
     def updateUi(self):
         
         if self.i > 0:
-            self.t0 = time.time()
-            self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.lines[self.j])}).scaled(1000, 700, Qt.KeepAspectRatio))
-            self.j = self.j + 1
+            if self.j < len(self.lines):
+                self.t0 = time.time()
+                self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.lines[self.j])}).scaled(1000, 700, Qt.KeepAspectRatio))
+                self.j = self.j + 1
+                if self.j == len(self.lines)-1:
+                    print('on')
+                    self.f.close()
+                    self.f1 = open('/home/an/pyqt/11/names1.txt')
+                    self.lines1 = [line.rstrip('\n') for line in self.f1]
+                    self.g =0
+            else:
+                if self.g < len(self.lines):
+                    self.t0 = time.time()
+                    self.lbl.setPixmap(QPixmap("""%(name)s.png"""%{'name':str(self.lines1[self.g])}).scaled(1000, 700, Qt.KeepAspectRatio))
+                    self.g = self.g + 1
             
         else:
             
@@ -74,7 +90,7 @@ class Example(QWidget):
             self.lbl.update()
 
         if e.key() == Qt.Key_Escape:
-            self.f.close()
+            self.f1.close()
             self.close()
             
 
